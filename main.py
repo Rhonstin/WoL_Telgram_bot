@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 from socket import socket, gethostbyname, AF_INET, SOCK_STREAM
-message = "'Hi! Use /wol <IP> <MAC> <PORT> \n Where: \n\n <IP> = your global ip. default ip address is 255.255.255.255 \n\n <MAC> = your PC MAC-adress \n\n <PORT> = open to world port the default port is 9 \n\n EXAMPLE: /wol 255.255.255.255 00:0a:95:9d:68 9"
+from wakeonlan import send_magic_packet
+message = "'Hi! Use /wol <MAC> <IP> <PORT> \n Where: <MAC> = your PC MAC-adress \n\n \n\n <IP> = your global ip. default ip address is 255.255.255.255 \n\n  <PORT> = open to world port the default port is 9 \n\n EXAMPLE: /wol 00:0a:95:9d:68 255.255.255.255  9"
 def start(update, context):
     update.message.reply_text(message)
 
@@ -10,14 +11,16 @@ def start(update, context):
 def wol(update, context): 
     chat_id = update.message.chat_id
     try:
-        ip = context.args[0]
-        mac = context.args[1]
-        port = context.args[2]
+        mac = context.args[0]
+        ip = context.args[1]       
+        port =  int(context.args[2])
         s = socket(AF_INET, SOCK_STREAM)
-        result = s.connect_ex(('176.37.101.88', 8080))
-        print(1)
+        result = s.connect_ex((ip, port))
+        print(result)
         if(result == 0) :
-            update.message.reply_text('Port' + port + " is open")
+            update.message.reply_text('Port: ' + str(port) + " is open")
+        elif(result == 113):
+            update.message.reply_text('Port: ' + str(port) + " is close")
         s.close()
     except (IndexError, ValueError):
         update.message.reply_text(message)
