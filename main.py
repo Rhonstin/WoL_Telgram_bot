@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler
 from socket import socket, gethostbyname, AF_INET, SOCK_STREAM
-from wakeonlan import send_magic_packet
+
 message = "'Hi! Use /wol <MAC> <IP> <PORT> \n Where: <MAC> = your PC MAC-adress \n\n \n\n <IP> = your global ip. default ip address is 255.255.255.255 \n\n  <PORT> = open to world port the default port is 9 \n\n EXAMPLE: /wol 00:0a:95:9d:68 255.255.255.255  9"
 def start(update, context):
     update.message.reply_text(message)
